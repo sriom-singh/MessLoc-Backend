@@ -1,4 +1,4 @@
-const Mess = require("../models/Mess");
+const Mess = require("../models/mess.model");
 
 // Create Mess
 exports.createMess = async (req, res) => {
@@ -29,6 +29,7 @@ exports.getAllMesses = async (req, res) => {
       data: messes,
     });
   } catch (error) {
+    console.error("Error fetching messes:", error);
     res.status(500).json({
       success: false,
       message: error.message,

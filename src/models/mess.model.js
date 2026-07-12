@@ -13,7 +13,10 @@ const messSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     phone: {
       type: String,
       required: true,
@@ -130,7 +133,7 @@ const messSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Mess", messSchema);

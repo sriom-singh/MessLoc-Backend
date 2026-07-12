@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
@@ -21,5 +23,7 @@ app.get("/", (req, res) => {
 app.use("/health", require("./routes/health.routes"));
 
 app.use("/api/messes", require("./routes/mess.routes.js"));
+app.use("/api/users", require("./routes/user.routes.js"));
+app.use("/api/auth", require("./routes/auth.routes.js"));
 
 module.exports = app;
