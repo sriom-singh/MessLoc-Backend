@@ -1,4 +1,67 @@
 const Mess = require("../models/mess.model");
+const { getRecommendations } = require("../services/gemini.services");
+
+exports.recommendMesses = async (req, res) => {
+  try {
+    const { city, foodType, budget, mealType, amenities = [] } = req.body;
+
+    const filter = {
+      isActive: true,
+      isVerified: true,
+    };
+
+    if (city) filter.city = city;
+
+    if (foodType === "Veg") {
+      filter.foodType = { $in: ["Veg", "Both"] };
+    } else if (foodType === "Non-Veg") {
+      filter.foodType = { $in: ["Non-Veg", "Both"] };
+    }
+
+    if (budget) {
+      filter.monthlyPrice = {
+        $lte: Number(budget),
+      };
+    }
+
+    if (mealType) {
+      filter.mealType = mealType;
+    }
+
+    if (amenities.length) {
+      filter.amenities = {
+        $all: amenities,
+      };
+    }
+
+    const messes = await Mess.find(filter)
+      .sort({ rating: -1 })
+      .limit(20)
+      .lean();
+
+    if (!messes.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No messes found.",
+      });
+    }
+
+    const finalRecommendations = await getRecommendations(req.body, messes);
+    console.log("Final", finalRecommendations);
+
+    return res.json({
+      success: true,
+      recommendations: finalRecommendations,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to generate recommendations.",
+    });
+  }
+};
 
 // Create Mess
 exports.createMess = async (req, res) => {
@@ -63,18 +126,14 @@ exports.getMessById = async (req, res) => {
 
 // Update Mess
 exports.updateMess = async (req, res) => {
-    console.log("PUT request received");
+  console.log("PUT request received");
   console.log(req.params.id);
 
   try {
-    const mess = await Mess.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    const mess = await Mess.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!mess) {
       return res.status(404).json({

@@ -2,126 +2,173 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 const connectDB = require("../config/db");
-const Mess = require("../models/Mess");
+const Mess = require("../models/mess.model");
 
-const messes = [
+const cities = [
   {
-    name: "Annapurna Mess",
-    ownerName: "Rakesh Kumar",
-    phone: "9876543210",
-    email: "annapurna@example.com",
-    description: "Affordable home-style food.",
-    address: "Prem Nagar",
-    city: "Dehradun",
-    state: "Uttarakhand",
-    pincode: "248007",
-    rating: 4.5,
-    totalReviews: 120,
-    location: {
-      latitude: 30.3165,
-      longitude: 78.0322,
-    },
-    foodType: "Veg",
-    mealType: ["Breakfast", "Lunch", "Dinner"],
-    monthlyPrice: 3200,
-    amenities: ["RO Water", "Home Delivery"],
-    images: ["https://images.unsplash.com/photo-1544025162-d76694265947?w=800"],
-  },
-  {
-    name: "Punjabi Tadka Mess",
-    ownerName: "Amit Singh",
-    phone: "9876543211",
-    email: "punjabi@example.com",
-    description: "North Indian meals with unlimited chapatis.",
-    address: "Ballupur",
     city: "Dehradun",
     state: "Uttarakhand",
     pincode: "248001",
-    rating: 4.2,
-    totalReviews: 50,
-    location: {
-      latitude: 30.325,
-      longitude: 78.041,
-    },
-    foodType: "Both",
-    mealType: ["Lunch", "Dinner"],
-    monthlyPrice: 4000,
-    amenities: ["WiFi", "Parking", "RO Water"],
-    images: [
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800",
-    ],
+    lat: 30.3165,
+    lng: 78.0322,
   },
   {
-    name: "Student's Choice Mess",
-    ownerName: "Sanjay Verma",
-    phone: "9876543212",
-    email: "students@example.com",
-    description: "Budget-friendly meals for students.",
-    address: "Clement Town",
-    city: "Dehradun",
-    state: "Uttarakhand",
-    rating: 4.0,
-    totalReviews: 142,
-    pincode: "248002",
-    location: {
-      latitude: 30.282,
-      longitude: 78.019,
-    },
-    foodType: "Veg",
-    mealType: ["Lunch", "Dinner"],
-    monthlyPrice: 2800,
-    amenities: ["Home Delivery"],
-    images: [
-      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800",
-    ],
+    city: "Delhi",
+    state: "Delhi",
+    pincode: "110001",
+    lat: 28.6139,
+    lng: 77.209,
   },
   {
-    name: "Hyderabad Spice Mess",
-    ownerName: "Vijay Singh",
+    city: "Noida",
+    state: "Uttar Pradesh",
+    pincode: "201301",
+    lat: 28.5355,
+    lng: 77.391,
+  },
+  {
     city: "Hyderabad",
-    phone: "9276545210",
-    email: "hyderabad@example.com",
     state: "Telangana",
     pincode: "500081",
-    address: "Madhapur, Hyderabad",
-    foodType: "Non-Veg",
-    monthlyPrice: 4000,
-    mealType: ["Lunch", "Dinner"],
-    images: [
-      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800",
-    ],
-    rating: 4.9,
-    totalReviews: 892,
-    location: {
-      latitude: 17.4485,
-      longitude: 78.3908,
-    },
-    amenities: ["Home Delivery", "WiFi", "Parking"],
+    lat: 17.385,
+    lng: 78.4867,
   },
   {
-    name: "South Indian Meals",
     city: "Bengaluru",
-    phone: "7276593210",
-    email: "southindian@example.com",
-    ownerName: "Akhil Kumar",
     state: "Karnataka",
-    pincode: "560034",
-    address: "Koramangala, Bengaluru",
-    foodType: "Veg",
-    monthlyPrice: 5800,
-    images: [
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
-    ],
-    rating: 4.7,
-    totalReviews: 476,
-    amenities: ["WiFi", "Home Delivery"],
-    location: {
-      latitude: 12.9352,
-      longitude: 77.6245,
-    },
+    pincode: "560001",
+    lat: 12.9716,
+    lng: 77.5946,
+  },
+  {
+    city: "Pune",
+    state: "Maharashtra",
+    pincode: "411001",
+    lat: 18.5204,
+    lng: 73.8567,
+  },
+  {
+    city: "Patna",
+    state: "Bihar",
+    pincode: "800001",
+    lat: 25.5941,
+    lng: 85.1376,
+  },
+  {
+    city: "Gaya",
+    state: "Bihar",
+    pincode: "823001",
+    lat: 24.7914,
+    lng: 85.0002,
   },
 ];
 
+const messNames = [
+  "Annapurna Mess",
+  "Sharma Mess",
+  "Student's Choice",
+  "Food Junction",
+  "Healthy Bites",
+  "Royal Kitchen",
+  "Maa Ka Rasoi",
+  "City Mess",
+  "Home Delight",
+  "Daily Tiffin",
+  "Punjabi Tadka",
+  "Biryani House",
+  "South Meals",
+  "Green Bowl",
+  "Fresh Plate",
+  "Campus Mess",
+  "Sai Bhojanalaya",
+  "Taste Point",
+  "Happy Meal",
+  "Family Kitchen",
+];
+
+const owners = [
+  "Rakesh Kumar",
+  "Amit Singh",
+  "Rahul Sharma",
+  "Sanjay Verma",
+  "Akhil Kumar",
+  "Vijay Singh",
+  "Manoj Gupta",
+  "Ravi Yadav",
+  "Pankaj Mishra",
+  "Deepak Kumar",
+];
+
+const foodTypes = ["Veg", "Non-Veg", "Both"];
+
+const mealOptions = [
+  ["Breakfast", "Lunch", "Dinner"],
+  ["Lunch", "Dinner"],
+  ["Breakfast", "Dinner"],
+];
+
+const amenitiesList = [
+  "WiFi",
+  "Parking",
+  "RO Water",
+  "Home Delivery",
+  "AC",
+  "CCTV",
+  "Tiffin Service",
+];
+
+const images = [
+  "https://images.unsplash.com/photo-1544025162-d76694265947?w=800",
+  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800",
+  "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800",
+  "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800",
+  "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800",
+];
+
+const messes = Array.from({ length: 50 }, (_, i) => {
+  const city = cities[Math.floor(Math.random() * cities.length)];
+
+  return {
+    name: `${messNames[Math.floor(Math.random() * messNames.length)]} ${i + 1}`,
+    ownerName: owners[Math.floor(Math.random() * owners.length)],
+    phone: `98${Math.floor(10000000 + Math.random() * 89999999)}`,
+    email: `mess${i + 1}@example.com`,
+    description:
+      "Fresh homemade meals with hygienic kitchen and affordable monthly plans.",
+    address: `Street ${i + 1}, ${city.city}`,
+    city: city.city,
+    state: city.state,
+    pincode: city.pincode,
+
+    location: {
+      latitude: city.lat + (Math.random() - 0.5) * 0.04,
+      longitude: city.lng + (Math.random() - 0.5) * 0.04,
+    },
+
+    foodType: foodTypes[Math.floor(Math.random() * foodTypes.length)],
+
+    mealType:
+      mealOptions[Math.floor(Math.random() * mealOptions.length)],
+
+    monthlyPrice: 2500 + Math.floor(Math.random() * 5500),
+
+    yearlyPrice: null,
+
+    rating: Number((3.5 + Math.random() * 1.5).toFixed(1)),
+
+    totalReviews: Math.floor(Math.random() * 800),
+
+    amenities: amenitiesList.filter(() => Math.random() > 0.5),
+
+    images: [
+      images[Math.floor(Math.random() * images.length)],
+    ],
+
+    isVerified: Math.random() > 0.2,
+
+    isActive: true,
+  };
+});
 const seedData = async () => {
   try {
     await connectDB();
